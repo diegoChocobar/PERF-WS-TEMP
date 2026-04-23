@@ -1,0 +1,47 @@
+[33mcommit 5916ef0afc01807de4e9d9c26866e1671d4cedc2[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 20:09:22 2021 -0300
+
+    version finish 23-02-2021
+
+[33mcommit 33beaab9d6c7d826694a509c766aff89d011295b[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 19:59:09 2021 -0300
+
+    actualizacion de funcionamiento al presionar pulsador hold
+
+[33mcommit 39894b290ae61595ec0c6a109374ad9eb85b8e36[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 19:46:07 2021 -0300
+
+    version led
+
+[33mcommit 4d0f156fe2ce2487828893abdd10aa476707ac57[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 19:39:14 2021 -0300
+
+    version con led
+
+[33mcommit f8c81e544dd62a1be424c3ec9e5c54cb4581de13[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 16:07:27 2021 -0300
+
+    New Carteles
+
+[33mcommit 9fed6c11a0f6c61ca6d3e015521d1464870f6fd8[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 15:52:05 2021 -0300
+
+    Agregamos sentencia para corregir el error en envio de datos a la web
+
+[33mcommit fc3f89917e1f387f50dba7f452d7d88cc16e265f[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 15:47:35 2021 -0300
+
+    Cargamos el Proyecto
+
+[33mcommit 04292d4a0a62d802a3f712a619b6142ab4646ef8[m
+Author: diego-Dell <registros.d@gmail.com>
+Date:   Tue Feb 23 15:44:05 2021 -0300
+
+    Iniciando el proyecto en GIT
