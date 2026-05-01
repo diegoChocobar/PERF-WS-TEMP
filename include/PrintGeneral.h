@@ -9,8 +9,8 @@ void PrintEscalaADS(void);
 void PrintValoresLCD(Corrientes x, Temperaturas temp, Profundidad prof){
    char buffer[10]; //necesario para imprimir datos reservando lugar vacío al inicio XXXX.XX
    float RES_CORR = 0.02;
-   float RES_TEMP = 0.05;
-   float RES_PROF = 0.05;
+   float RES_TEMP = 0.01;
+   float RES_PROF = 0.005;
   event[PRINT].estado = false;
 
   if(bandHold ==true){//si el hold esta activo, no actualizamos los valores de corriente, temperatura y profundidad en el LCD.
@@ -32,8 +32,8 @@ void PrintValoresLCD(Corrientes x, Temperaturas temp, Profundidad prof){
     dtostrf(temp.valor, 7, 2, buffer);//7 caracteres: 4 enteros, 1punto y 2 decimales
     lcd.setCursor(0, 1);lcd.print("Temp:");lcd.print(buffer);lcd.print("C");
   }
-  if(fabs(prof.valor - Prof_p_print.valor) > RES_PROF){//acturalizamos el valor de profundidad, teniendo en cuenta el valor anterior para evitar actualizar el LCD con cambios menores a RES_PROF
-    Prof_p_print.valor = prof.valor;
+  if(fabs(prof.valor - Prof_print.valor) > RES_PROF){//acturalizamos el valor de profundidad, teniendo en cuenta el valor anterior para evitar actualizar el LCD con cambios menores a RES_PROF
+    Prof_print.valor = prof.valor;
     dtostrf(prof.valor, 7, 2, buffer);//7 caracteres: 4 enteros, 1punto y 2 decimales
     lcd.setCursor(0, 0);lcd.print("Prof:");lcd.print(buffer);lcd.print("m");
   }

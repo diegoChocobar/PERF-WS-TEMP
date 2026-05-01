@@ -5,71 +5,133 @@ void EstadoMedirCorriente(void);
 void EstadoPrint(void);
 void EstadoEnvioDatos(void);
 void EstadoTestConectMqtt(void);
+void EstadoMedirProfundidad(void);
 
+void EstadoBanderasPulsadores(void)
+{
+  // --- lectura SIEMPRE (no depende de delay) ---
+  bool mas = (digitalRead(pulsador_mas) == LOW);
+  bool menos = (digitalRead(pulsador_menos) == LOW);
 
+  static bool last_mas = false; //las clausulas static significan que la variable se inicializa una sola vez y luego mantiene su valor entre llamadas a la funcion.
+  static bool last_menos = false;
 
-void EstadoBanderasPulsadores(void){
+  static unsigned long t_repeat_mas = 0;
+  static unsigned long t_repeat_menos = 0;
 
-  if (delayMillis(tiempo_pulsadores, 25)){
-    /////// Check estado de pulsadores cada 25ms para actualizar las banderas de eventos correspondientes //////////
-    if(digitalRead(pulsador_zero) == 0){
-      event[OFFSET_I].estado = true;
+  static unsigned long t_reset = 0;
+  static bool reset_en_proceso = false;
+
+  //PRIORIDAD: RESET (ambos botones)
+  if (mas && menos)
+  {
+    if (!reset_en_proceso)
+    {
+      t_reset = millis();
+      reset_en_proceso = true;
     }
-    if(digitalRead(pulsador_escala) == 0){
-      event[ESCALA_I].estado = true;
+
+    if (millis() - t_reset >= 2000)
+    {
+      event[OFFSET_PROF].estado = true;
     }
-    if(digitalRead(pulsador_disparo) != bandPulsadorDisparo){//si el estado del pulsador de disparo cambio
-      bandPulsadorDisparo = digitalRead(pulsador_disparo);
-      if(bandPulsadorDisparo==false){bandDisparo=true;}else{bandDisparo=false;}
-      event[DISPARO].estado = true;
-    }
-    if(digitalRead(pulsador_hold) != bandPulsadorHold){//si el estado del pulsador de hold cambio
-      bandPulsadorHold = digitalRead(pulsador_hold);
-      if(bandPulsadorHold == true){bandHold=false;}else{bandHold=true;}
-      event[HOLD].estado = true;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // mientras están ambos, no procesamos nada más
+    last_mas = mas;
+    last_menos = menos;
+    return;
+  }
+  else
+  {
+    reset_en_proceso = false;
   }
 
+  //FLANCO + REPETICIÓN MAS
 
+  // flanco (click corto)
+  if (mas && !last_mas)
+  {
+    event[PROFUNDIDAD_MAS].estado = true;
+    t_repeat_mas = millis(); // reinicia repetición
+  }
+
+  // repetición al mantener
+  if (mas && (millis() - t_repeat_mas > 300))
+  {
+    event[PROFUNDIDAD_MAS].estado = true;
+    t_repeat_mas = millis();
+  }
+
+  //FLANCO + REPETICIÓN MENOS
+
+  if (menos && !last_menos)
+  {
+    event[PROFUNDIDAD_MENOS].estado = true;
+    t_repeat_menos = millis();
+  }
+
+  if (menos && (millis() - t_repeat_menos > 300))
+  {
+    event[PROFUNDIDAD_MENOS].estado = true;
+    t_repeat_menos = millis();
+  }
+
+  // ACTUALIZAR ESTADOS
+  last_mas = mas;
+  last_menos = menos;
 }
-void EstadoMedirCorriente(void){
 
-  if (delayMillis(tiempo_MedirCorriente, 100)){
+void EstadoMedirCorriente(void)
+{
+
+  if (delayMillis(tiempo_MedirCorriente, 100))
+  {
     event[MEDIRCORRIENTE].estado = true;
   }
-
 }
 
-void EstadoPrint(void){
+void EstadoPrint(void)
+{
 
-  if (delayMillis(tiempo_LCD, 750)){
+  if (delayMillis(tiempo_LCD, 750))
+  {
     event[PRINT].estado = true;
   }
-
 }
 
-void EstadoEnvioDatos(void){
+void EstadoEnvioDatos(void)
+{
 
-  if (delayMillis(tiempo_EnvioDatos, 1000)){
+  if (delayMillis(tiempo_EnvioDatos, 1000))
+  {
     event[ENVIODATOS].estado = true;
   }
-
 }
 
-void EstadoTestConectMqtt(void){
+void EstadoTestConectMqtt(void)
+{
 
-  if (delayMillis(tiempo_testConectMqtt, 15000)){
+  if (delayMillis(tiempo_testConectMqtt, 15000))
+  {
     event[TEST_CONECT_MQTT].estado = true;
   }
-
 }
 
-bool delayMillis(unsigned long &tiempoAnterior, unsigned long intervalo) {
+void EstadoMedirProfundidad(void)
+{
+  if (delayMillis(tiempo_MedirProfundidad, 500))
+  {
+    event[MEDIRPROFUNDIDAD].estado = true;
+  }
+}
+
+bool delayMillis(unsigned long &tiempoAnterior, unsigned long intervalo)
+{
 
   unsigned long ahora = millis();
 
-  if ((unsigned long)(ahora - tiempoAnterior) >= intervalo) {
+  if ((unsigned long)(ahora - tiempoAnterior) >= intervalo)
+  {
     tiempoAnterior = ahora;
     return true;
   }

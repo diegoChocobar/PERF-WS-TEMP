@@ -2,7 +2,7 @@
 
 //#include <Variables.h>
 #include <PrintNumber.h>
-
+#include <Encoder.h>
 #include <Conectar_WiFi.h>
 
 void SaludoInicial();
@@ -10,6 +10,8 @@ void setearDataRateADS(int escala);
 
 void setup(void)
 {
+  initEncoder();
+  /*
   pinMode(pulsador_escala, INPUT_PULLUP);//Configuramos el pin como entrada pullup
   digitalWrite(pulsador_escala, HIGH);
 
@@ -21,7 +23,7 @@ void setup(void)
 
   pinMode(pulsador_disparo, INPUT_PULLUP);//Configuramos el pin como entrada pullup
   digitalWrite(pulsador_disparo, HIGH);
-
+*/
 
   pinMode(output_led, OUTPUT);
   digitalWrite(output_led, LOW);
@@ -35,7 +37,7 @@ void setup(void)
   delay(10);
 
 ////////////////// ENTRAMOS EN MODO CALIBRACION? ////////////////////////////////////////////////////
-  if(digitalRead(pulsador_zero) == 0){
+  if(digitalRead(pulsador_menos) == 0){
     //entramos en el modo calibracion (desactivamos la funcion calibrar)
     bandModoADS = true;
   }else{

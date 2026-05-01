@@ -1,3 +1,4 @@
+#pragma once// Salva que se incluya mas de una vez. Permite incluir este achivo en varios otros
 #include <Arduino.h>
 #include <Wire.h>
 
@@ -45,6 +46,7 @@ struct  Temperaturas
 
 struct  Profundidad
 {
+    volatile long pulsos;
     float valor;
     float offset;
 };
@@ -97,7 +99,7 @@ Eventos event[TOTALEVENTOS] = {
 
 ////////////////VARIABLES PARA MANEJO DEL LCD //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-LiquidCrystal_I2C lcd(0x3F,20,4);  // set the LCD address to 0x27 o 0x20 o 0x3F
+LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD address to 0x27 o 0x20 o 0x3F
 
 const int pos1_unidad=17,pos1_decena=12,pos1_centena=8,pos1_mil=4,pos1_diezmil=0;
 const int pos2_unidad=17,pos2_decena=13,pos2_centena=8,pos2_mil=4,pos2_diezmil=0;
@@ -138,17 +140,15 @@ Temperaturas Temp_t = {0,0,0,0,0,0,0};
 Temperaturas Temp_t_print = {1,0,0,0,0,0,0};
 Temperaturas Temp_offset = {0,0,0,0,0,0,0};
 
-Profundidad  Prof_p = {0,0};
-Profundidad  Prof_p_print = {1,0};
-Profundidad  Prof_offset = {0,0};
+Profundidad  Prof = {0,0.0,0.0};
+Profundidad  Prof_print = {1,9999.0,0.0};
 
 
 //////////////Variables para definicion de Pines//////////////////////////////////
-int pulsador_escala = 16;             //pin utilizado para el pulsador de cambio de escala
-int pulsador_zero = 14;               //pin utilizado para pulsador de puesta a cero la medicion
-int pulsador_hold = 13;             //pin utilizado para pulsador selector de potencia de salida
-int pulsador_disparo = 12;            //pin utilizado para pulsador selector de potencia de salida
-
+int pulsador_mas = 16;
+int pulsador_menos = 14;
+const int pinEncoderA = 12;
+const int pinEncoderB = 13;
 
 int output_led = 2;     //pin de salida led indicador
 int output_zumbador = 3; //pin de salida zumbador
@@ -177,6 +177,7 @@ unsigned long tiempo_pulsadores = 0;
 unsigned long tiempo_MedirCorriente = 0;
 unsigned long tiempo_EnvioDatos = 0;
 unsigned long tiempo_testConectMqtt = 0;
+unsigned long tiempo_MedirProfundidad = 0;
 
 unsigned long tiempo_medida_total = 0;  //pulsador para congelar la señal
 unsigned long tiempo_medida_indiv = 0;  //pulsador para congelar la señal

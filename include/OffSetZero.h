@@ -1,5 +1,5 @@
 #include <Arduino.h>
-
+/*
 void OffSetZero(void){
 
   event[OFFSET_I].estado = false;
@@ -27,3 +27,4 @@ void OffSetZero(void){
 
 
 }
+      */

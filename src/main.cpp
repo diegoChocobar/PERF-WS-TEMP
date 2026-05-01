@@ -3,7 +3,7 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_ADS1X15.h>
-//#include <Adafruit_ADS1015.h>
+// #include <Adafruit_ADS1015.h>
 
 #include <LiquidCrystal_I2C.h>
 #include <ESP8266WiFi.h>
@@ -17,14 +17,15 @@
 #include <LeerADS1115.h>
 #include <LeerCorriente.h>
 #include <EscalaSelect.h>
-#include <OffSetZero.h>
+// #include <OffSetZero.h>
 #include <PrintGeneral.h>
 #include <ActivarHold.h>
 #include <ActivarDisparo.h>
 #include <Conectar_Mqtt.h>
 #include <RecepcionMqtt.h>
 #include <EstadoBanderas.h>
-
+#include <Encoder.h>
+#include <Pulsadores.h>
 
 void loop(void)
 {
@@ -36,59 +37,85 @@ void loop(void)
   tiempo_MedirCorriente = millis();
   tiempo_EnvioDatos = millis();
   tiempo_testConectMqtt = millis();
-
+  tiempo_MedirProfundidad = millis();
 
   delay(250);
-  lcd.home();lcd.clear();
+  lcd.home();
+  lcd.clear();
   lcd.setCursor(0, 0);
-  if(!bandModoADS){PrintValoresLCD(deltaI, Temp_t, Prof_p);}else{PrintADS(deltaI);}
-  
+  if (!bandModoADS)
+  {
+    PrintValoresLCD(deltaI, Temp_t, Prof);
+  }
+  else
+  {
+    PrintADS(deltaI);
+  }
 
-  while (1){
+  while (1)
+  {
 
     tiempo_actual = millis();
 
-      client.loop();
+    client.loop();
 
     /////chequeo de pulsadores, acciones o eventos //////
-      EstadoMedirCorriente();
-      EstadoPrint();
-      EstadoBanderasPulsadores();
-      EstadoEnvioDatos();
-      EstadoTestConectMqtt();
+    EstadoMedirCorriente();
+    EstadoPrint();
+    EstadoBanderasPulsadores();
+    EstadoEnvioDatos();
+    EstadoTestConectMqtt();
+    EstadoMedirProfundidad();
     //////////////////////////////
 
-    if(event[MEDIRCORRIENTE].estado){
+    if (event[MEDIRCORRIENTE].estado)
+    {
       deltaI = MedirCorriente();
     }
-    if(event[PRINT].estado){
-      if(!bandModoADS){PrintValoresLCD(deltaI, Temp_t, Prof_p);}else{PrintADS(deltaI);}
+    if (event[MEDIRPROFUNDIDAD].estado)
+    {
+      calcularProfundidad();
     }
-    if(event[OFFSET_I].estado){
-      OffSetZero();
+    if (event[PRINT].estado)
+    {
+      if (!bandModoADS)
+      {
+        PrintValoresLCD(deltaI, Temp_t, Prof);
+      }
+      else
+      {
+        PrintADS(deltaI);
+      }
     }
-    if(event[ESCALA_I].estado){
-      EscalaSelect();
+    if (event[PROFUNDIDAD_MAS].estado)
+    {
+      ProfundidadMas();
     }
-    if(event[DISPARO].estado){
-      ActivarDisparo();
+
+    if (event[PROFUNDIDAD_MENOS].estado)
+    {
+      ProfundidadMenos();
     }
-    if(event[HOLD].estado){
+
+    if (event[OFFSET_PROF].estado)
+    {
+      ResetProfundidad();
+    }
+
+    if (event[HOLD].estado)
+    {
       ActivarHold();
     }
-    if(event[ENVIODATOS].estado){
+    if (event[ENVIODATOS].estado)
+    {
       event[ENVIODATOS].estado = false;
       EnviarDataCorriente(deltaI);
     }
-    if(event[TEST_CONECT_MQTT].estado){
+    if (event[TEST_CONECT_MQTT].estado)
+    {
       conectMqtt();
     }
-    
+
     delay(1);
-
-
-
   }
-
-
 }
