@@ -136,8 +136,8 @@ Corrientes offset_2 ={0,0,0,0,0,0,0};
 Corrientes deltaI = {0,0,0,0,0,0,0};
 Corrientes deltaIPrint={1,0,0,0,0,0,0};
 
-Temperaturas Temp_t = {0,0,0,0,0,0,0};
-Temperaturas Temp_t_print = {1,0,0,0,0,0,0};
+Temperaturas Temp = {0,0,0,0,0,0,0};
+Temperaturas Temp_print = {1,0,0,0,0,0,0};
 Temperaturas Temp_offset = {0,0,0,0,0,0,0};
 
 Profundidad  Prof = {0,0.0,0.0};
@@ -174,7 +174,7 @@ unsigned long tiempo_LCD = 0;
 unsigned long tiempo_Ping = 0;
 unsigned long tiempo_DataFull = 0;
 unsigned long tiempo_pulsadores = 0;
-unsigned long tiempo_MedirCorriente = 0;
+unsigned long tiempo_MedirTemperatura = 0;
 unsigned long tiempo_EnvioDatos = 0;
 unsigned long tiempo_testConectMqtt = 0;
 unsigned long tiempo_MedirProfundidad = 0;

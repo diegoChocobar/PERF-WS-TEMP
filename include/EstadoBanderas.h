@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 bool delayMillis(unsigned long &tiempoAnterior, unsigned long intervalo);
-void EstadoMedirCorriente(void);
+void EstadoMedirTemperatura(void);
 void EstadoPrint(void);
 void EstadoEnvioDatos(void);
 void EstadoTestConectMqtt(void);
@@ -81,12 +81,12 @@ void EstadoBanderasPulsadores(void)
   last_menos = menos;
 }
 
-void EstadoMedirCorriente(void)
+void EstadoMedirTemperatura(void)
 {
 
-  if (delayMillis(tiempo_MedirCorriente, 100))
+  if (delayMillis(tiempo_MedirTemperatura, 100))
   {
-    event[MEDIRCORRIENTE].estado = true;
+    event[MEDIRTEMPERATURA].estado = true;
   }
 }
 

@@ -14,10 +14,10 @@ void EscalaSelect(void){
   event[PRINT].estado = true;
   event[ESCALA_I].print_status = true;
   pulsoPin(output_zumbador,output_led,-1,-1,100);
-  /*
-  while(digitalRead(pulsador_escala) == 0){delay(10);}//mientras tenemos presionado el pulsador
+  ///*
+  //while(digitalRead(pulsador_escala) == 0){delay(10);}//mientras tenemos presionado el pulsador
   EscalaSwitch(escala);
-  */
+  //*/
 }
 
 void EscalaSwitch(int x){

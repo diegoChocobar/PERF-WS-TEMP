@@ -15,7 +15,7 @@
 #include <EnviarDatos.h>
 #include <Ajustar.h>
 #include <LeerADS1115.h>
-#include <LeerCorriente.h>
+#include <MedirTemperatura.h>
 #include <EscalaSelect.h>
 // #include <OffSetZero.h>
 #include <PrintGeneral.h>
@@ -26,6 +26,7 @@
 #include <EstadoBanderas.h>
 #include <Encoder.h>
 #include <Pulsadores.h>
+//#include <MedirTemperatura.h>
 
 void loop(void)
 {
@@ -34,7 +35,7 @@ void loop(void)
   tiempo_LCD = millis();
   tiempo_Ping = millis();
   tiempo_pulsadores = millis();
-  tiempo_MedirCorriente = millis();
+  tiempo_MedirTemperatura = millis();
   tiempo_EnvioDatos = millis();
   tiempo_testConectMqtt = millis();
   tiempo_MedirProfundidad = millis();
@@ -45,11 +46,11 @@ void loop(void)
   lcd.setCursor(0, 0);
   if (!bandModoADS)
   {
-    PrintValoresLCD(deltaI, Temp_t, Prof);
+    PrintValoresLCD(deltaI, Temp, Prof);
   }
   else
   {
-    PrintADS(deltaI);
+    PrintADS(Temp);
   }
 
   while (1)
@@ -60,7 +61,7 @@ void loop(void)
     client.loop();
 
     /////chequeo de pulsadores, acciones o eventos //////
-    EstadoMedirCorriente();
+    EstadoMedirTemperatura();
     EstadoPrint();
     EstadoBanderasPulsadores();
     EstadoEnvioDatos();
@@ -68,9 +69,10 @@ void loop(void)
     EstadoMedirProfundidad();
     //////////////////////////////
 
-    if (event[MEDIRCORRIENTE].estado)
+    if (event[MEDIRTEMPERATURA].estado)
     {
-      deltaI = MedirCorriente();
+      event[MEDIRTEMPERATURA].estado = false;
+      Temp = MedirTemperatura();
     }
     if (event[MEDIRPROFUNDIDAD].estado)
     {
@@ -80,11 +82,11 @@ void loop(void)
     {
       if (!bandModoADS)
       {
-        PrintValoresLCD(deltaI, Temp_t, Prof);
+        PrintValoresLCD(deltaI, Temp, Prof);
       }
       else
       {
-        PrintADS(deltaI);
+        PrintADS(Temp);
       }
     }
     if (event[PROFUNDIDAD_MAS].estado)
@@ -109,7 +111,9 @@ void loop(void)
     if (event[ENVIODATOS].estado)
     {
       event[ENVIODATOS].estado = false;
-      EnviarDataCorriente(deltaI);
+
+      EnviarTemperatura(Temp);
+      EnviarProfundidad(Prof);
     }
     if (event[TEST_CONECT_MQTT].estado)
     {

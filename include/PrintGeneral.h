@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 void PrintValoresLCD(Corrientes x, Temperaturas temp, Profundidad prof);
-void PrintADS(Corrientes x);
+void PrintADS(Temperaturas x);
 void PrintEscala(void);
 void PrintEvento(void);
 void PrintEscalaADS(void);
@@ -27,8 +27,8 @@ void PrintValoresLCD(Corrientes x, Temperaturas temp, Profundidad prof){
     dtostrf(x.valor, 7, 2, buffer);//7 caracteres: 4 enteros, 1punto y 2 decimales
     lcd.setCursor(0, 2);lcd.print("Corr:");lcd.print(buffer);lcd.print("mA");
   }
-  if(fabs(temp.valor - Temp_t_print.valor) > RES_TEMP){//acturalizamos el valor de temperatura, teniendo en cuenta el valor anterior para evitar actualizar el LCD con cambios menores a RES_TEMP
-    Temp_t_print.valor = temp.valor;
+  if(fabs(temp.valor - Temp_print.valor) > RES_TEMP){//acturalizamos el valor de temperatura, teniendo en cuenta el valor anterior para evitar actualizar el LCD con cambios menores a RES_TEMP
+    Temp_print.valor = temp.valor;
     dtostrf(temp.valor, 7, 2, buffer);//7 caracteres: 4 enteros, 1punto y 2 decimales
     lcd.setCursor(0, 1);lcd.print("Temp:");lcd.print(buffer);lcd.print("C");
   }
@@ -46,7 +46,7 @@ void PrintValoresLCD(Corrientes x, Temperaturas temp, Profundidad prof){
 
 }
 
-void PrintADS(Corrientes x){
+void PrintADS(Temperaturas x){
    char buffer[10]; //necesario para imprimir datos reservando lugar vacío al inicio XXXX.XX
    float RES_CORR = 0.02;
    event[PRINT].estado = false;

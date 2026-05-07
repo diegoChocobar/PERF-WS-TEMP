@@ -7,96 +7,74 @@ void parseConfigI(String msg);
 /////////////////////////////////////////////////////////////////////
 //void callback(char* topic, byte* payload, unsigned int length) {}
 ///*
-void callback(char* topic, byte* payload, unsigned int length) {
-  // handle message arrived
-    payload[length] = '\0';
-    String strTopic = String((char*)topic);
-    String Topic_partes[4]; // asumiendo que siempre hay 4 partes separadas por "/"
-    //user:Topic_partes[0]; ubicacion:Topic_partes[1]; lugar:Topic_partes[2]; tipo:Topic_partes[3]; name:Topic_partes[4]
-    String mensaje = ""; //Creamos un String para almacenar el payload
-    String str_nserie = (String)nSerie;
+void callback(char* topic, byte* payload, unsigned int length)
+{
+  String t = String(topic);
 
-    // Iteramos sobre cada byte del payload y lo agregamos al String
-    for (unsigned int i = 0; i < length; i++) {
-        mensaje += (char)payload[i];
+  String msg;
+  msg.reserve(length);
+
+  for (unsigned int i = 0; i < length; i++) {
+    msg += (char)payload[i];
+  }
+
+  // =========================
+  // HOLD (desde C o desde I)
+  // =========================
+  if (t == "Perf_C/Perf_TP/Hold/Write" || t == "Perf_I/Perf_TP/Hold/Write")
+  {
+    bandHold = (msg == "ON");
+    event[HOLD].estado = true;
+
+    pulsoPin(output_led, output_zumbador, -1, -1, 250);
+    return;
+  }
+
+  // =========================
+  // STATUS CHECK
+  // =========================
+  if (t == "Perf_C/Perf_TP/Status/Read")
+  {
+    EnviarStatus("ON");
+
+    pulsoPin(output_led, output_zumbador, -1, -1, 250);
+    return;
+  }
+
+  // =========================
+  // PROFUNDIDAD CONTROL
+  // =========================
+  if (t == "Perf_C/Perf_TP/Profundidad/Write")
+  {
+    if (msg == "+") {
+      event[PROFUNDIDAD_MAS].estado = true;
+    }
+    else if (msg == "-") {
+      event[PROFUNDIDAD_MENOS].estado = true;
+    }
+    else if (msg == "RESET") {
+      event[OFFSET_PROF].estado = true;
     }
 
-    // Llamamos a la función split() para separar el string
-    separar(strTopic, '/', Topic_partes, 4);
-     
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_I" && Topic_partes[2]=="Hold" && Topic_partes[3]=="Status"){
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-        EnviarHold("ON");
-    }
-     
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_I" && Topic_partes[2]=="Check" && Topic_partes[3]=="?"){
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-        EnviarStatus("ON");
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-    }
-    
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_I" && Topic_partes[2]=="Disparo" && Topic_partes[3]=="ON"){
-        event[DISPARO].estado = true;
-        bandDisparo = true;
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-    }
-    
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_I" && Topic_partes[2]=="Disparo" && Topic_partes[3]=="OFF"){
-        event[DISPARO].estado = true;
-        bandDisparo = false;
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-    }
+    pulsoPin(output_led, output_zumbador, -1, -1, 250);
+    return;
+  }
 
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_I" && Topic_partes[2]=="Config" && Topic_partes[3]=="Values"){
-            parseConfigI(mensaje);
-            isEnvieDataFull = true;
-    }
+  // =========================
+  // (OPCIONAL) CONFIG
+  // =========================
+  if (t == "Perf_C/Perf_TP/Config/Values")
+  {
+    parseConfigI(msg);
+    isEnvieDataFull = true;
+    return;
+  }
 
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_I" && Topic_partes[2]=="Config" && Topic_partes[3]=="OFF"){
-            isEnvieDataFull = false;
-    }
-
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_X" && Topic_partes[2]=="Hold" && Topic_partes[3]=="ON"){
-        event[HOLD].estado = true;
-        bandHold = true;
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-    }
-
-    if(Topic_partes[0]=="SEV_C" && Topic_partes[1]=="SEV_X" && Topic_partes[2]=="Hold" && Topic_partes[3]=="OFF"){
-        event[HOLD].estado = true;
-        bandHold = false;
-        pulsoPin(output_led,output_zumbador,-1,-1,250);
-    }
-
-}
-//*//////////////////////////////////////////////////////////////////////////
-
-
-// Función para dividir un string en partes usando un delimitador
-void separar(String str, char delimiter, String parts[], int maxSize) {
-    int partIndex = 0; // Índice de la parte actual
-    int startIndex = 0; // Índice de inicio de la parte actual
-
-    // Recorremos el string
-    for (unsigned int i = 0; i < str.length(); i++) {
-        // Si encontramos el delimitador o llegamos al final del string
-        if (str.charAt(i) == delimiter || i == str.length() - 1) {
-            // Extraemos la parte actual
-            if (i == str.length() - 1) {
-                parts[partIndex] = str.substring(startIndex, i + 1);
-            } else {
-                parts[partIndex] = str.substring(startIndex, i);
-            }
-            // Incrementamos el índice de la parte actual
-            partIndex++;
-            // Actualizamos el índice de inicio para la próxima parte
-            startIndex = i + 1;
-        }
-        // Si alcanzamos el máximo de partes, salimos del bucle
-        if (partIndex >= maxSize) {
-            break;
-        }
-    }
+  if (t == "Perf_C/Perf_TP/Config/OFF")
+  {
+    isEnvieDataFull = false;
+    return;
+  }
 }
 
 void parseConfigI(String msg) {

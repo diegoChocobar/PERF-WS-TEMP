@@ -1,32 +1,32 @@
 #include <Arduino.h>
 
-unsigned long LeerADS1115(int canal, int nMedidas, int16_t *señal_buffer);
-ValueADS calculo_valores_ads1115(int16_t x[], int length);
+unsigned long LeerADS1115(int16_t *señal_buffer);
+ValueADS calculo_valores_ads1115(int16_t x[]);
 
 
-ValueADS MedirADS1115(int canal, int escala){
+ValueADS MedirADS1115(){
   
   ValueADS data_ads = {0,0,0,0,0,0};//
   int16_t delta_senal[Iteraciones];
   unsigned long tiempo_medida = 0;
    
-  tiempo_medida = LeerADS1115(canal, Iteraciones, delta_senal);//obtenemos en delta_senal lo valores medidos por el ads1115
+  tiempo_medida = LeerADS1115(delta_senal);//obtenemos en delta_senal lo valores medidos por el ads1115
 
-  data_ads = calculo_valores_ads1115(delta_senal, Iteraciones);
+  data_ads = calculo_valores_ads1115(delta_senal);
   data_ads.tiempo_individual = tiempo_medida;
 
   return data_ads;
 
 }
 
-unsigned long LeerADS1115(int canal, int nMedidas, int16_t *senal_buffer){
+unsigned long LeerADS1115(int16_t *senal_buffer){
   
   int16_t diferencia = 0;
   unsigned long tiempo_medida = millis();
   
   int ret=1;
 
-  for (int i = 0; i < nMedidas; i++) {
+  for (int i = 0; i < Iteraciones; i++) {
 
     if (canal == 1) {
         diferencia = ads.readADC_Differential_0_1();
@@ -46,9 +46,9 @@ unsigned long LeerADS1115(int canal, int nMedidas, int16_t *senal_buffer){
 
 }
 
-ValueADS calculo_valores_ads1115(int16_t x[], int length){
+ValueADS calculo_valores_ads1115(int16_t x[]){
 
-  float tension[length];
+  float tension[Iteraciones];
   float sumatoria=0;
   //float result=0;
   ValueADS result;
@@ -63,19 +63,19 @@ ValueADS calculo_valores_ads1115(int16_t x[], int length){
   //float Rango=0;
 
 //////////////Calculo de valor promerio //////////////////////////////
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < Iteraciones; i++) {
       tension[i] = float( (x[i] ) * constanteADS );
       result.promedio = result.promedio + tension[i];
     }
-    result.promedio = result.promedio / length;
-    result.tamaño = length;
+    result.promedio = result.promedio / Iteraciones;
+    result.tamaño = Iteraciones;
 /////////////////////////////////////////////////////////////////////////
 
 ///////////////calculo de desvio standard//////////////////    
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < Iteraciones; i++) {
         sumatoria = sumatoria + (tension[i]-result.promedio)*(tension[i]-result.promedio);
     }
-    result.desvio_standar = sqrt(sumatoria/length);
+    result.desvio_standar = sqrt(sumatoria/Iteraciones);
 ////////////////////////////////////////////////////////////
 
 //////////////calculos adicionales///////////////////////////////
@@ -84,7 +84,7 @@ ValueADS calculo_valores_ads1115(int16_t x[], int length){
 /////////////////////////////////////////////////////////////////
 
 //////////////Calculo del valor final ////////////////////////////
-    for (int i = 0; i < length; i++) {
+    for (int i = 0; i < Iteraciones; i++) {
       
       if(tension[i]<Li || tension[i]>Ls){
         //estamos fuera del rango para tomar como buena una medicion
