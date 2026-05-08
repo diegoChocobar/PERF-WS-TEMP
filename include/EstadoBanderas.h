@@ -84,7 +84,7 @@ void EstadoBanderasPulsadores(void)
 void EstadoMedirTemperatura(void)
 {
 
-  if (delayMillis(tiempo_MedirTemperatura, 100))
+  if (delayMillis(tiempo_MedirTemperatura, 250))
   {
     event[MEDIRTEMPERATURA].estado = true;
   }
@@ -93,7 +93,7 @@ void EstadoMedirTemperatura(void)
 void EstadoPrint(void)
 {
 
-  if (delayMillis(tiempo_LCD, 750))
+  if (delayMillis(tiempo_LCD, 500))
   {
     event[PRINT].estado = true;
   }
@@ -119,7 +119,7 @@ void EstadoTestConectMqtt(void)
 
 void EstadoMedirProfundidad(void)
 {
-  if (delayMillis(tiempo_MedirProfundidad, 500))
+  if (delayMillis(tiempo_MedirProfundidad, 250))
   {
     event[MEDIRPROFUNDIDAD].estado = true;
   }

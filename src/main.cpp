@@ -39,6 +39,8 @@ void loop(void)
   tiempo_EnvioDatos = millis();
   tiempo_testConectMqtt = millis();
   tiempo_MedirProfundidad = millis();
+  
+  EscalaSwitch(escala);//se realiza el cambio en el startup porque depende de una variable y no es seleccionable por el usuario.
 
   delay(250);
   lcd.home();
@@ -46,7 +48,7 @@ void loop(void)
   lcd.setCursor(0, 0);
   if (!bandModoADS)
   {
-    PrintValoresLCD(deltaI, Temp, Prof);
+    PrintValoresLCD(Temp, Prof);
   }
   else
   {
@@ -82,7 +84,7 @@ void loop(void)
     {
       if (!bandModoADS)
       {
-        PrintValoresLCD(deltaI, Temp, Prof);
+        PrintValoresLCD(Temp, Prof);
       }
       else
       {

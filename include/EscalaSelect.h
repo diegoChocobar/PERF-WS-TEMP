@@ -4,15 +4,12 @@ void EscalaSwitch(int x);
 
 void EscalaSelect(void){
 
-  event[ESCALA_I].estado = false;
-
   if(bandHold ==true){//si el hold esta activo, no permitimos cambiar la escala.
     return;
   }
 
   
   event[PRINT].estado = true;
-  event[ESCALA_I].print_status = true;
   pulsoPin(output_zumbador,output_led,-1,-1,100);
   ///*
   //while(digitalRead(pulsador_escala) == 0){delay(10);}//mientras tenemos presionado el pulsador

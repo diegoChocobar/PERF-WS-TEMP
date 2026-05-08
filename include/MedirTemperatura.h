@@ -5,7 +5,7 @@
 Temperaturas MedirTemperatura(){
   
   
-  Temperaturas data_temperatura = {0,0,0,0,0,0,0};//
+  Temperaturas data_temperatura = {0,0,0,0,0,0};//
   ValueADS data_ads = {0,0,0,0,0,0};//
 
   event[MEDIRTEMPERATURA].estado = false;

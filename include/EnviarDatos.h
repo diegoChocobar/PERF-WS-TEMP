@@ -2,13 +2,13 @@
 
 #include <ESP8266HTTPClient.h>
 
-void EnviarDataCorriente(Corrientes dataI);
 void EnviarStatus(String status);
 
 
 void EnviarStatus(String status)
 {
   client.publish("Perf_TP/Perf_C/Status", status.c_str());
+  event[TEST_CONECT_MQTT].print_status = true;
 }
 
 void EnviarTemperatura(Temperaturas temp)
@@ -29,7 +29,6 @@ void EnviarTemperatura(Temperaturas temp)
   json += "\"tamano\":" + String(temp.tamaño) + ",";
   json += "\"n\":" + String(temp.n) + ",";
   json += "\"tiempo_individual\":" + String(temp.tiempo_individual) + ",";
-  json += "\"offset\":" + String(temp.offset, 2);
   json += "}";
 
   client.publish("Perf_TP/Perf_C/Temperatura/Full", json.c_str());

@@ -22,16 +22,6 @@ struct  ValueADS
     unsigned long tiempo_individual;
 };
 
-struct  Corrientes
-{
-    float valor;
-    float promedio;
-    float desvio_standar;
-    int tamaño;//tamño del numero de iteraciones para la obtencion de una medida
-    int n;//tamaño del valor que queda despues de tratar la señal
-    unsigned long tiempo_individual;
-    float offset;
-};
 
 struct  Temperaturas
 {
@@ -41,7 +31,6 @@ struct  Temperaturas
     int tamaño;//tamño del numero de iteraciones para la obtencion de una medida
     int n;//tamaño del valor que queda despues de tratar la señal
     unsigned long tiempo_individual;
-    float offset;
 };
 
 struct  Profundidad
@@ -52,25 +41,20 @@ struct  Profundidad
 };
 
 enum TipoEvento {
-    SIN_EVENTO,        // 0
-    HOLD,              // 1
-    DISPARO,           // 2
-    OFFSET_I,          // 3
-    ESCALA_I,
-    OFFSET_PROF,       
+    SIN_EVENTO,
+    HOLD,
+    OFFSET_PROF,
     PROFUNDIDAD_MAS,
     PROFUNDIDAD_MENOS,
-    MEDIRCORRIENTE, 
     MEDIRTEMPERATURA,
-    MEDIRPROFUNDIDAD, 
+    MEDIRPROFUNDIDAD,
     ENVIODATOS,
     PRINT,
     TEST_CONECT_MQTT,
-    
-       
 
     TOTALEVENTOS
 };
+
 struct  Eventos
 {
     TipoEvento tipo;
@@ -79,21 +63,28 @@ struct  Eventos
     boolean print_status;
     
 };
+
 Eventos event[TOTALEVENTOS] = {
-    {SIN_EVENTO,           false,"********************",false},/////sin eventos
-    {HOLD,                 false,"*******HOLD*********",false},///// Envento Hold
-    {DISPARO,              false,"******DISPARO*******",false},
-    {OFFSET_I,             false,"******OFFSET I******",false},
-    {ESCALA_I,             false,"****CAMBIO ESCALA***",false},
-    {OFFSET_PROF,          false,"****OFFSET PROF*****",false},
-    {PROFUNDIDAD_MAS,      false,"***PROFUNDIDAD + ***",false},
-    {PROFUNDIDAD_MENOS,    false,"***PROFUNDIDAD - ***",false},
-    {MEDIRCORRIENTE,       false,"**MEDIR CORRIENTE **",false},
-    {MEDIRTEMPERATURA,     false,"**MEDIR TEMPERATURA*",false},
-    {MEDIRPROFUNDIDAD,     false,"**MEDIR PROFUNDIDAD*",false},
-    {ENVIODATOS,           false,"****ENVIO DATOS*****",false},
-    {PRINT,                false,"***ESCALA      mA***",false},
-    {TEST_CONECT_MQTT,     false,"**TEST CONECT MQTT**",false}
+
+    {SIN_EVENTO, false,"******MIDIENDO******",false},
+
+    {HOLD,              false,"*******HOLD*********",true},
+
+    {OFFSET_PROF,       false,"****OFFSET PROF*****",true},
+
+    {PROFUNDIDAD_MAS,   false,"***PROFUNDIDAD +****",false},
+
+    {PROFUNDIDAD_MENOS, false,"***PROFUNDIDAD -****",false},
+
+    {MEDIRTEMPERATURA,  false,"",false},
+
+    {MEDIRPROFUNDIDAD,  false,"",false},
+
+    {ENVIODATOS,        false,"",false},
+
+    {PRINT,             false,"",false},
+
+    {TEST_CONECT_MQTT,  false,"*****TEST MQTT******",false}
 };
 
 
@@ -131,17 +122,12 @@ int ADS_Frec = 64; ///frecuencia de muestreo del ADS1115, en muestras por segund
 
 
 /////// Variables Globales Medidas  ////////////////////////////////
-Corrientes offset_1 ={0,0,0,0,0,0,0};
-Corrientes offset_2 ={0,0,0,0,0,0,0};
-Corrientes deltaI = {0,0,0,0,0,0,0};
-Corrientes deltaIPrint={1,0,0,0,0,0,0};
 
-Temperaturas Temp = {0,0,0,0,0,0,0};
-Temperaturas Temp_print = {1,0,0,0,0,0,0};
-Temperaturas Temp_offset = {0,0,0,0,0,0,0};
+Temperaturas Temp = {0,0,0,0,0,0};
+Temperaturas Temp_print = {1,0,0,0,0,0};
 
 Profundidad  Prof = {0,0.0,0.0};
-Profundidad  Prof_print = {1,9999.0,0.0};
+Profundidad  Prof_print = {9999,9999.0,1.5}; //valores imposibles para forzar primer print
 
 
 //////////////Variables para definicion de Pines//////////////////////////////////

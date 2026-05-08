@@ -7,15 +7,18 @@ void ResetProfundidad();
 void ProfundidadMas(){
   event[PROFUNDIDAD_MAS].estado = false;
   Prof.offset += 0.01;
+  event[PROFUNDIDAD_MAS].print_status = true;
 }
 
 void ProfundidadMenos(){
   event[PROFUNDIDAD_MENOS].estado = false;
   Prof.offset -= 0.01;
+  event[PROFUNDIDAD_MENOS].print_status = true;
 }
 
 void ResetProfundidad(){
   event[OFFSET_PROF].estado = false;
   Prof.pulsos = 0;
   Prof.offset = 0;
+  event[OFFSET_PROF].print_status = true;
 }

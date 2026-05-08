@@ -13,7 +13,6 @@ Temperaturas AjusteValores(ValueADS data_ads){
       data_temperatura.promedio = data_ads.promedio;
       data_temperatura.tamaño = data_ads.tamaño;
       data_temperatura.tiempo_individual = data_ads.tiempo_individual;
-      data_temperatura.offset = offset_1.valor;
     ////////////////////////////////////////////////  
 
 
