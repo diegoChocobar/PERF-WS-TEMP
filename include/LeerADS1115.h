@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-unsigned long LeerADS1115(int16_t *señal_buffer);
+unsigned long LeerADS1115(int16_t *senal_buffer);
 ValueADS calculo_valores_ads1115(int16_t x[]);
 
 
@@ -36,7 +36,7 @@ unsigned long LeerADS1115(int16_t *senal_buffer){
         return 0; // canal inválido
     }
     senal_buffer[i] = diferencia;
-    delay(ret);//este "delay" es fundamental para que la conexión WEBSOCKET no de caiga. no es lo mismo delayMicroseconds
+    delay(ret);
 
   }
 

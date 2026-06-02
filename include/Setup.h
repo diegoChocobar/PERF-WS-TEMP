@@ -1,12 +1,10 @@
 #include <Arduino.h>
 
-//#include <Variables.h>
-#include <PrintNumber.h>
 #include <Encoder.h>
 #include <Conectar_WiFi.h>
 
 void SaludoInicial();
-void setearDataRateADS(int escala);
+void setearDataRateADS(int frec);
 
 void setup(void)
 {
@@ -101,7 +99,7 @@ void SaludoInicial(){
     lcd.setCursor(0, 0);
     lcd.print("***CDC Elctronics***");
     lcd.setCursor(0, 1);
-    lcd.print(" PERF-WS-I -> v2.05 ");
+    lcd.print(" PERF-WS-TEMP->v2.10");
     lcd.setCursor(0, 2);
     lcd.print("Serie: ");
     lcd.print(nSerie);
@@ -125,9 +123,9 @@ void SaludoInicial(){
     //delay(2500);
 
 }
-void setearDataRateADS(int escala) {
+void setearDataRateADS(int frec) {
 
-  switch (escala) {
+  switch (frec) {
 
     case 8:
       ads.setDataRate(RATE_ADS1115_8SPS);

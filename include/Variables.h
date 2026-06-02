@@ -2,15 +2,12 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-//#include <WebSocketsClient.h>
-//#include <ArduinoWebsockets.h>
-
 #include <Hash.h>
-
 #include <stdarg.h>
 #include <avr/dtostrf.h>
 
 unsigned int nSerie = 9001;
+String Cliente = "ClienteX";
 
 struct  ValueADS
 {
@@ -89,7 +86,6 @@ Eventos event[TOTALEVENTOS] = {
 
 
 ////////////////VARIABLES PARA MANEJO DEL LCD //////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 LiquidCrystal_I2C lcd(0x27,20,4);  // set the LCD address to 0x27 o 0x20 o 0x3F
 
 const int pos1_unidad=17,pos1_decena=12,pos1_centena=8,pos1_mil=4,pos1_diezmil=0;
@@ -107,10 +103,9 @@ byte UMB[8] ={B11111,  B11111,  B11111,  B00000,  B00000,  B00000,  B11111,  B11
 byte LMB[8] ={B11111,  B00000,  B00000,  B00000,  B00000,  B11111,  B11111,  B11111};
 /////////////////////////////////////////////////////////////////////////////////////
 
-
+/////////////////////// Variables Globales ADS1115  ////////////////////////////////
 // Adafruit_ADS1115 ads(0x48);  /* Use this for the 16-bit version */ /*Dir I2C 0x48 (gnd) */
 Adafruit_ADS1115 ads;
-//Adafruit_ADS1015 ads;     /* Use thi for the 12-bit version */
 
 float constanteADS;
 int escala;
@@ -119,16 +114,15 @@ int canal=1;
 int Iteraciones=15;
 float confianza_h = 1.25; ///variable de alejamiento del desvio standar
 int ADS_Frec = 64; ///frecuencia de muestreo del ADS1115, en muestras por segundo. 8;16;32;64;128;250;475;860
-
+//////////////////////////////////////////////////////////////////////////////////
 
 /////// Variables Globales Medidas  ////////////////////////////////
-
 Temperaturas Temp = {0,0,0,0,0,0};
 Temperaturas Temp_print = {1,0,0,0,0,0};
 
 Profundidad  Prof = {0,0.0,0.0};
 Profundidad  Prof_print = {9999,9999.0,1.5}; //valores imposibles para forzar primer print
-
+//////////////////////////////////////////////////////////////////////////////////
 
 //////////////Variables para definicion de Pines//////////////////////////////////
 int pulsador_mas = 16;
@@ -151,21 +145,18 @@ boolean bandModoADS = false;
 boolean bandMedirCorriente = false;
 boolean bandPulsadorDisparo = true;
 boolean bandPulsadorHold = true;
-boolean bandTestConectMqtt = true;
 ////////////////////////////////////////////////
 
 /////////////Variables para los manejos de tiempo de acciones ////////////////////
 unsigned long tiempo_actual = 0;
 unsigned long tiempo_LCD = 0;
 unsigned long tiempo_Ping = 0;
-unsigned long tiempo_DataFull = 0;
 unsigned long tiempo_pulsadores = 0;
 unsigned long tiempo_MedirTemperatura = 0;
 unsigned long tiempo_EnvioDatos = 0;
 unsigned long tiempo_testConectMqtt = 0;
 unsigned long tiempo_MedirProfundidad = 0;
 
-unsigned long tiempo_medida_total = 0;  //pulsador para congelar la señal
 unsigned long tiempo_medida_indiv = 0;  //pulsador para congelar la señal
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -174,12 +165,7 @@ unsigned long tiempo_medida_indiv = 0;  //pulsador para congelar la señal
 const char* ssid = "SEV_WiFi";
 const char* password = "ChDi1088";
 
-int Num_Dispositivos = 0;
-int Num_Disp_Check = 0;
-
 bool isEnvieDataFull = false;
-
-
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////INCIALIZAR MQTT /////////////////////////////////////////////////
@@ -193,8 +179,6 @@ const int mqtt_port = 1883;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-
-String str_topicPublic="SEV_C/SEV_I/Default/Default";
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////// Definicion de Funciones ///////////////////////////////////////

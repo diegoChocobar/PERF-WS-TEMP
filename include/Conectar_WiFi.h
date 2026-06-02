@@ -1,8 +1,5 @@
 #include <Arduino.h>
 
-//si usas esp8266
-//#include <ESP8266WiFi.h>
-//#include <WebSocketsClient.h>
 #include <Hash.h>
 
 void Conectar_WiFi(){
@@ -18,7 +15,6 @@ void Conectar_WiFi(){
   while (WiFi.status() != WL_CONNECTED  and cont_conexion <50) { //Check for the connection
     cont_conexion = cont_conexion +1;
     delay(500);
-    //Serial.print(".");
     lcd.print(".");
     if(WiFi.status() == WL_CONNECT_FAILED){
       //contraseña incorrecta, salimos del bucle
@@ -33,7 +29,6 @@ void Conectar_WiFi(){
 
     }
     
-
   }
 
 
@@ -54,11 +49,6 @@ void Conectar_WiFi(){
 
     delay(2000);
     digitalWrite(output_led, LOW);
-
-
-    ////Conectando Mqtt////////////////
-    
-    /////////////////////////////////////////////////////////////////////////////
 
   }else{
       //No nos pudimos conectar al software

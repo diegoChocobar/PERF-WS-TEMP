@@ -15,7 +15,7 @@ Temperaturas MedirTemperatura(){
       }
 
   data_ads = MedirADS1115();//canal, Iteraciones son variables globales.
-  //data_temperatura 
+
   data_temperatura = AjusteValores(data_ads);//deltaI es una variable global
 
   return data_temperatura;

@@ -2,12 +2,10 @@
 
 #include <ESP8266HTTPClient.h>
 
-void EnviarStatus(String status);
-
 
 void EnviarStatus(String status)
 {
-  client.publish("Perf_TP/Perf_C/Status", status.c_str());
+  client.publish("PERF_TP/PERF_C/STATUS/WRITE", status.c_str());
   event[TEST_CONECT_MQTT].print_status = true;
 }
 
@@ -17,7 +15,7 @@ void EnviarTemperatura(Temperaturas temp)
 
   // VALUE
   client.publish(
-    "Perf_TP/Perf_C/Temperatura/Value",
+    "PERF_TP/PERF_X/TEMPERATURA/VALUE",
     String(temp.valor, 2).c_str()
   );
 
@@ -28,10 +26,10 @@ void EnviarTemperatura(Temperaturas temp)
   json += "\"desvio_standar\":" + String(temp.desvio_standar, 2) + ",";
   json += "\"tamano\":" + String(temp.tamaño) + ",";
   json += "\"n\":" + String(temp.n) + ",";
-  json += "\"tiempo_individual\":" + String(temp.tiempo_individual) + ",";
+  json += "\"tiempo_individual\":" + String(temp.tiempo_individual);
   json += "}";
 
-  client.publish("Perf_TP/Perf_C/Temperatura/Full", json.c_str());
+  client.publish("PERF_TP/PERF_C/TEMPERATURA/FULL", json.c_str());
 }
 
 void EnviarProfundidad(Profundidad prof)
@@ -40,7 +38,7 @@ void EnviarProfundidad(Profundidad prof)
 
   // VALUE
   client.publish(
-    "Perf_TP/Perf_C/Profundidad/Value",
+    "PERF_TP/PERF_X/PROFUNDIDAD/VALUE",
     String(prof.valor, 3).c_str()
   );
 
@@ -51,5 +49,5 @@ void EnviarProfundidad(Profundidad prof)
   json += "\"pulsos\":" + String(prof.pulsos);
   json += "}";
 
-  client.publish("Perf_TP/Perf_C/Profundidad/Full", json.c_str());
+  client.publish("PERF_TP/PERF_C/PROFUNDIDAD/FULL", json.c_str());
 }

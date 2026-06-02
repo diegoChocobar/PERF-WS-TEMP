@@ -3,7 +3,6 @@
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_ADS1X15.h>
-// #include <Adafruit_ADS1015.h>
 
 #include <LiquidCrystal_I2C.h>
 #include <ESP8266WiFi.h>
@@ -16,8 +15,6 @@
 #include <Ajustar.h>
 #include <LeerADS1115.h>
 #include <MedirTemperatura.h>
-#include <EscalaSelect.h>
-// #include <OffSetZero.h>
 #include <PrintGeneral.h>
 #include <ActivarHold.h>
 #include <ActivarDisparo.h>
@@ -26,7 +23,6 @@
 #include <EstadoBanderas.h>
 #include <Encoder.h>
 #include <Pulsadores.h>
-//#include <MedirTemperatura.h>
 
 void loop(void)
 {
@@ -40,8 +36,6 @@ void loop(void)
   tiempo_testConectMqtt = millis();
   tiempo_MedirProfundidad = millis();
   
-  EscalaSwitch(escala);//se realiza el cambio en el startup porque depende de una variable y no es seleccionable por el usuario.
-
   delay(250);
   lcd.home();
   lcd.clear();
@@ -73,7 +67,6 @@ void loop(void)
 
     if (event[MEDIRTEMPERATURA].estado)
     {
-      event[MEDIRTEMPERATURA].estado = false;
       Temp = MedirTemperatura();
     }
     if (event[MEDIRPROFUNDIDAD].estado)
@@ -106,17 +99,18 @@ void loop(void)
       ResetProfundidad();
     }
 
+    if (event[ENVIODATOS].estado)
+    {
+      event[ENVIODATOS].estado = false;
+      EnviarTemperatura(Temp);
+      EnviarProfundidad(Prof);
+    }
+
     if (event[HOLD].estado)
     {
       ActivarHold();
     }
-    if (event[ENVIODATOS].estado)
-    {
-      event[ENVIODATOS].estado = false;
 
-      EnviarTemperatura(Temp);
-      EnviarProfundidad(Prof);
-    }
     if (event[TEST_CONECT_MQTT].estado)
     {
       conectMqtt();

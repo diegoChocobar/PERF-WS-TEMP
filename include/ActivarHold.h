@@ -12,6 +12,8 @@ void ActivarHold(void){
 
     if(bandHold ==true){//debemos congelar Print, y dejar de medir corriente, pero no debemos dejar de enviar el ping para mantener la conexión mqtt activa
       PrintEvento();
+      EnviarTemperatura(Temp);
+      EnviarProfundidad(Prof);
       event[PRINT].estado = false;
       event[HOLD].print_status = false;
     }
